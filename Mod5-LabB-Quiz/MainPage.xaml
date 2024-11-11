@@ -1,0 +1,68 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Mod5_LabB_Quiz.MainPage">
+
+    <ScrollView>
+        <VerticalStackLayout
+            Padding="30,0"
+            Spacing="25">
+            <Image
+                Source="thinkingguy.png"
+                HeightRequest="185"
+                Aspect="AspectFit"
+                SemanticProperties.Description="the best personality quiz around" />
+
+            <Label
+                Text="Welcome to the Personality Quiz!"
+                Style="{StaticResource Headline}"
+                SemanticProperties.HeadingLevel="Level1" />
+
+            <!-- Hidden Result Image -->
+            <Image x:Name="ResultImage" 
+               HeightRequest="200" 
+               Aspect="AspectFit" 
+               Margin="20,0,0,0" 
+               IsVisible="False" />
+
+            <!-- Reset Button -->
+            <Button x:Name="ResetButton" 
+                Text="Reset Quiz" 
+                Clicked="OnResetClicked" 
+                BackgroundColor="LightGray" 
+                WidthRequest="100" 
+                Margin="10,0"
+                IsVisible="False"/>
+
+            <StackLayout x:Name="QuizContent" Padding="20" VerticalOptions="CenterAndExpand">
+                <!-- Question Image -->
+                <Image x:Name="QuestionImage" 
+                   HeightRequest="200" 
+                   Aspect="AspectFit" 
+                   Margin="0,0,0,20" />
+
+                <!-- Question Text -->
+                <Label x:Name="QuestionLabel" 
+                   Text="Question will appear here" 
+                   FontSize="20" 
+                   HorizontalOptions="Center" 
+                   VerticalOptions="Center" 
+                   Margin="0,0,0,20" /> 
+
+                <!-- True/False Buttons -->
+                <StackLayout Orientation="Horizontal" HorizontalOptions="Center">
+                    <Button Text="True" 
+                        Clicked="OnAnswerClicked" 
+                        BackgroundColor="LightGreen" 
+                        Margin="10,0"/>
+                    <Button Text="False" 
+                        Clicked="OnAnswerClicked" 
+                        BackgroundColor="LightCoral" 
+                        Margin="10,0"/>     
+                </StackLayout>
+            </StackLayout>
+        </VerticalStackLayout>
+        
+    </ScrollView>
+
+</ContentPage>
