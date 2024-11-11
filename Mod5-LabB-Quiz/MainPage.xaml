@@ -14,7 +14,7 @@
                 SemanticProperties.Description="the best personality quiz around" />
 
             <Label
-                Text="Welcome to the Personality Quiz!"
+                Text="Welcome to the Lord of The Rings Personality Quiz!"
                 Style="{StaticResource Headline}"
                 SemanticProperties.HeadingLevel="Level1" />
 
