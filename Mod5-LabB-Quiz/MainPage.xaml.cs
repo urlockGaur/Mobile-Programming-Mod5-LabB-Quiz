@@ -80,6 +80,27 @@
             DisplayAlert("Quiz Result", result, "OK");
         }
 
+        private void OnSwiped(object sender, SwipedEventArgs e)
+        {
+            switch (e.Direction)
+            {
+                case SwipeDirection.Left:
+                    // Handle left swipe: 
+                    _currentQuestionIndex++;
+                    if (_currentQuestionIndex >= _questions.Count)
+                        _currentQuestionIndex = 0; 
+                    LoadQuestion();
+                    break;
+
+                case SwipeDirection.Right:
+                    // Handle right swipe: 
+                    _currentQuestionIndex--;
+                    if (_currentQuestionIndex < 0)
+                        _currentQuestionIndex = _questions.Count - 1; 
+                    LoadQuestion();
+                    break;
+            }
+        }
         private void OnResetClicked(object sender, EventArgs e)
         {
             // Reset the quiz state

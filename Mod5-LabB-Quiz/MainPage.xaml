@@ -35,6 +35,12 @@
                 IsVisible="False"/>
 
             <StackLayout x:Name="QuizContent" Padding="20" VerticalOptions="CenterAndExpand">
+                <!-- Swipe Gesture Recognizers for Left and Right -->
+                <StackLayout.GestureRecognizers>
+                    <SwipeGestureRecognizer Direction="Left" Swiped="OnSwiped"/>
+                    <SwipeGestureRecognizer Direction="Right" Swiped="OnSwiped"/>
+                </StackLayout.GestureRecognizers>
+
                 <!-- Question Image -->
                 <Image x:Name="QuestionImage" 
                    HeightRequest="200" 
