@@ -34,6 +34,8 @@
                 Margin="10,0"
                 IsVisible="False"/>
 
+            <!-- Start Quiz Button -->
+            <Button x:Name="StartQuizButton" Text="Start Quiz" Clicked="OnStartQuizClicked" />
             <StackLayout x:Name="QuizContent" Padding="20" VerticalOptions="CenterAndExpand">
                 <!-- Swipe Gesture Recognizers for Left and Right -->
                 <StackLayout.GestureRecognizers>

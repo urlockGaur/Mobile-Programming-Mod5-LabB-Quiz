@@ -1,32 +1,55 @@
-﻿namespace Mod5_LabB_Quiz
+﻿using Mod5_LabB_Quiz.Models;
+using System;
+using System.Collections.Generic;
+
+namespace Mod5_LabB_Quiz
 {
     public partial class MainPage : ContentPage
     {
         private int _currentQuestionIndex = 0;
         private int _score = 0;
-
-        private List<(string Question, string ImagePath, bool Answer)> _questions = new List<(string, string, bool)>
-        {
-            ("Do you enjoy adventure?", "adventure.png", true),
-            ("Do you prefer quiet places?", "quiet.png", true),
-            ("Is strength more important than wisdom?", "strength.png", true),
-            ("Do you enjoy puzzles?", "puzzles.png", true),
-            ("Would you help a stranger in need?", "help.png", true),
-        };
+        private List<Question> _questions;
 
         public MainPage()
         {
             InitializeComponent();
-            LoadQuestion();
+            LoadQuestions();
         }
 
-        private void LoadQuestion()
+        private void LoadQuestions()
         {
-            if(_currentQuestionIndex < _questions.Count)
+            // Fetch questions from the database
+            _questions = App.QuestionRepo.GetQuestions();
+
+            if (_questions == null || _questions.Count == 0)
             {
-                var (question, imagePath, _) = _questions[_currentQuestionIndex];
-                QuestionLabel.Text = question;
-                QuestionImage.Source = imagePath;
+                DisplayAlert("Error", "No questions found in the database.", "OK");
+                StartQuizButton.IsEnabled = false;
+            }
+            else
+            {
+                StartQuizButton.IsEnabled = true;
+            }
+        }
+
+        private void OnStartQuizClicked(object sender, EventArgs e)
+        {
+            _currentQuestionIndex = 0;
+            _score = 0;
+            QuizContent.IsVisible = true; // Show quiz content
+            ResultImage.IsVisible = false; // Hide result image
+            ResetButton.IsVisible = false; // Hide reset button
+            StartQuizButton.IsVisible = false; // Hide start button
+            DisplayCurrentQuestion();
+        }
+
+        private void DisplayCurrentQuestion()
+        {
+            if (_currentQuestionIndex < _questions.Count)
+            {
+                var question = _questions[_currentQuestionIndex];
+                QuestionLabel.Text = question.Text;
+                QuestionImage.Source = question.ImagePath;
             }
             else
             {
@@ -34,35 +57,34 @@
             }
         }
 
-       private void OnAnswerClicked(object sender, EventArgs e)
+        private void OnAnswerClicked(object sender, EventArgs e)
         {
             var button = (Button)sender;
-            bool userAnswer = button.Text == "True";
-            bool correctAnswer = _questions[_currentQuestionIndex].Answer;
+            bool userAnswer = button.Text == "True"; 
 
-            if (userAnswer == correctAnswer)
+           
+            if (userAnswer)
             {
-                _score++;
+                _score++; 
             }
 
             _currentQuestionIndex++;
-            LoadQuestion();
+            DisplayCurrentQuestion();
         }
-
         private void ShowResults()
         {
             string result;
             string imagePath;
 
-            if (_score <= 2)
+            if (_score <= 1)
             {
                 result = "You are like Frodo: brave and determined!";
-                imagePath = "frodo.png"; 
+                imagePath = "frodo.png";
             }
-            else if (_score <= 4)
+            else if (_score <= 3)
             {
                 result = "You are like Sam: loyal and strong!";
-                imagePath = "sam.png"; 
+                imagePath = "sam.png";
             }
             else
             {
@@ -71,52 +93,39 @@
             }
 
             QuizContent.IsVisible = false;
-            // Set the image source and make it visible
             ResultImage.Source = imagePath;
             ResultImage.IsVisible = true;
-
             ResetButton.IsVisible = true;
-            // Show the result message in an alert
+
             DisplayAlert("Quiz Result", result, "OK");
         }
-
         private void OnSwiped(object sender, SwipedEventArgs e)
         {
+            if (_questions == null || _questions.Count == 0)
+                return;
+
             switch (e.Direction)
             {
                 case SwipeDirection.Left:
-                    // Handle left swipe: 
-                    _currentQuestionIndex++;
-                    if (_currentQuestionIndex >= _questions.Count)
-                        _currentQuestionIndex = 0; 
-                    LoadQuestion();
+                    _currentQuestionIndex = (_currentQuestionIndex + 1) % _questions.Count;
                     break;
-
                 case SwipeDirection.Right:
-                    // Handle right swipe: 
-                    _currentQuestionIndex--;
-                    if (_currentQuestionIndex < 0)
-                        _currentQuestionIndex = _questions.Count - 1; 
-                    LoadQuestion();
+                    _currentQuestionIndex = (_currentQuestionIndex - 1 + _questions.Count) % _questions.Count;
                     break;
             }
+
+            DisplayCurrentQuestion();
         }
+
         private void OnResetClicked(object sender, EventArgs e)
         {
-            // Reset the quiz state
             _currentQuestionIndex = 0;
             _score = 0;
 
-            // Hide the result image and Reset button
             ResultImage.IsVisible = false;
             ResetButton.IsVisible = false;
-
-            // Show the quiz content
-            QuizContent.IsVisible = true;
-
-            // Load the first question
-            LoadQuestion();
+            StartQuizButton.IsVisible = true;
+            QuizContent.IsVisible = false;
         }
     }
-
 }
